@@ -1,0 +1,239 @@
+<?php
+define ('INDEX', true);
+// Copyright 2013 (c) by Larry Kluger!
+// License: The MIT License. See http://opensource.org/licenses/MIT
+
+?><!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Force latest IE rendering engine or ChromeFrame if installed -->
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <meta charset="utf-8">
+    <title>Upload and sign</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="css/jquery.fileupload-ui.css">
+
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+      }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+	  #modal_feedback {font-weight: bolder;}
+      #dropzone {
+		background: palegreen;
+		width: 180px;
+		height: 40px;
+		line-height: 35px;
+		text-align: center;
+		font-weight: bold;
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 20px;
+	  }
+  	  #dropzone.in {
+		width: 600px;
+		height: 200px;
+		line-height: 200px;
+		font-size: larger;
+	  }
+	  #dropzone.hover {
+		background: lawngreen;
+	  }
+	  #dropzone.fade {
+		-webkit-transition: all 0.3s ease-out;
+		-moz-transition: all 0.3s ease-out;
+		-ms-transition: all 0.3s ease-out;
+		-o-transition: all 0.3s ease-out;
+		transition: all 0.3s ease-out;
+		opacity: 1;
+	  }
+	</style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="ico/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="container-narrow">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <h3 class="muted">CoSign Signature Web Agent Example</h3>
+      </div>
+
+      <hr>
+
+      <div class="jumbotron">
+        <h1>Upload and Sign</h1>
+        <p class="lead">Upload and digitally sign a PDF document.</p>
+		
+		<!-- The fileinput-button span is used to style the file input field as button -->
+		<span class="btn btn-success fileinput-button">
+			<i class="icon-plus icon-white"></i>
+			<span>Select a file...</span>
+			<!-- The file input field used as target for the file upload widget -->
+			<input id="fileupload" type="file" name="files[]" multiple>
+		</span>
+        <div id="dropzone" class="fade well">...or drop PDF files here</div>
+		<br>
+		<br>
+		<!-- The global progress bar -->
+		<div id="progress" class="progress progress-success progress-striped">
+			<div class="bar"></div>
+		</div>
+		
+        <!-- <a id="sign_btn" class="btn btn-large btn-success" href="#">Sign!</a> -->
+        <p class="lead" style="margin-top:20px;">Use credentials: John Miller / 12345678</p>
+	  </div>
+    </div> <!-- /container -->
+
+	<!-- Modal - See http://twitter.github.io/bootstrap/javascript.html#modals  -->
+	<div id="start_signing" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+		<h3 id="myModalLabel">Processing…</h3>
+	  </div>
+	  <div class="modal-body">
+	    <p id="modal_feedback"></p>
+		<p>We're processing your signing request.</p>
+		<p>Remember to authenticate as John Miller, password 12345678</p>
+	  </div>
+	</div>
+	
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script>
+	$(document).ready(function () {
+      // Use .ready may not be necessary, see http://goo.gl/aAhs  but we'll be
+	  // conservative and include it.
+      function add_events(){
+        $('#sign_btn').on('click', function (e) {
+		  window.location="sign_start.php";
+		  // See http://goo.gl/ltHjD
+		  $('#start_signing').modal({keyboard: false, backdrop: 'static'});
+		});
+      }
+	  add_events();
+    });
+    </script>
+
+	<!-- Start of file upload stuff -->
+	<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+	<script src="js/vendor/jquery.ui.widget.js"></script>
+	<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="js/jquery.iframe-transport.js"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="js/jquery.fileupload.js"></script>
+	<script>
+	/*jslint unparam: true */
+	/*global window, $ */
+	$(function () {
+		'use strict';
+		var url = 'upload_handler_index.php',
+		uid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+           var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+           return v.toString(16);}); // See http://goo.gl/cYjpM
+		
+		// See https://github.com/blueimp/jQuery-File-Upload/wiki/API
+		//     https://github.com/blueimp/jQuery-File-Upload/wiki/Options
+		$('#fileupload').fileupload({
+			url: url,
+			singleFileUploads: true,
+			dataType: 'json',
+			dropZone: $('#dropzone'),
+			formData: [{name: 'uid', value: uid}], // send a uid to uniquely identify the file
+			done: function (e, data) {
+			    var file = data.result.files[0],
+				    file_name = file.name.substr(39); // drop the uid prefix
+				$('#modal_feedback').text(file_name + ' was uploaded.');
+				$('#progress').addClass('hide');
+				// See http://goo.gl/ltHjD
+				$('#start_signing').modal({keyboard: false, backdrop: 'static'});
+				window.location="sign_start.php" + "?fn="  + encodeURIComponent(file.name);
+				},
+			progressall: function (e, data) {
+				var progress = parseInt(data.loaded / data.total * 100, 10);
+				$('#progress .bar').css(
+					'width',
+					progress + '%'
+				);
+			},
+			acceptFileTypes: /(\.|\/)(pdf|xls|xlsx|doc|docx)$/i // doesn't seem to work
+		});
+	
+		// dropzone effects. See http://goo.gl/vAfxB
+		$(document).bind('dragover', function (e) {
+			var dropZone = $('#dropzone'),
+				timeout = window.dropZoneTimeout;
+			if (!timeout) {
+				dropZone.addClass('in');
+			} else {
+				clearTimeout(timeout);
+			}
+			var found = false,
+				node = e.target;
+			do {
+				if (node === dropZone[0]) {
+					found = true;
+					break;
+				}
+				node = node.parentNode;
+			} while (node != null);
+			if (found) {
+				dropZone.addClass('hover');
+			} else {
+				dropZone.removeClass('hover');
+			}
+			window.dropZoneTimeout = setTimeout(function () {
+				window.dropZoneTimeout = null;
+				dropZone.removeClass('in hover');
+			}, 100);
+		});	
+	});
+	</script>
+	<!-- End of file upload stuff -->
+	
+  </body>
+</html>
