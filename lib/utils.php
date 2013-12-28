@@ -12,6 +12,48 @@ if (!defined('INDEX')) {
 }
 
 //============================================================+
+// find_cookie -- read the session info from the cookie
+// Side effect: creates/sets $cookie_info
+//============================================================+
+function find_cookie()
+{
+	global $cookie_info;
+	if (isset($_COOKIE[COOKIE_NAME]) {
+		// cookie available
+		$cookie_info = unserialize ($_COOKIE[COOKIE_NAME]);
+		if (!is_array($cookie_info) || !isset($cookie_info['cookie_ver'] || $cookie_info['cookie_ver'] != COOKIE_VER) {
+			// bad moon rising: not our cookie
+			exit ('=======  Bad cookie! =======');
+		}
+	} else {
+		// create cookie
+		$cookie_info = ['cookie_ver' => COOKIE_VER,
+			'filename' => false,
+			'guid' => create_guid()];
+	}
+}
+//============================================================+
+// send_cookie -- read the session info from the cookie
+// Side effect: creates/sets $cookie_info
+//============================================================+
+function find_cookie()
+{
+	global $cookie_info;
+	if (isset($_COOKIE[COOKIE_NAME]) {
+		// cookie available
+		$cookie_info = unserialize ($_COOKIE[COOKIE_NAME]);
+		if (!is_array($cookie_info) || !isset($cookie_info['cookie_ver'] || $cookie_info['cookie_ver'] != COOKIE_VER) {
+			// bad moon rising: not our cookie
+			exit ('=======  Bad cookie! =======');
+		}
+	} else {
+		// create cookie
+		$cookie_info = ['cookie_ver' => COOKIE_VER,
+			'filename' => false,
+			'guid' => create_guid()];
+	}
+}
+//============================================================+
 // send_redirect -- send redirect header
 // ARGS
 //   $url
@@ -135,3 +177,28 @@ function get_file_info($fn)
   return $info;
 }
 
+// See http://www.php.net/manual/en/function.uniqid.php
+function create_guid($namespace = '') {     
+    static $guid = '';
+    $uid = uniqid("", true);
+    $data = $namespace;
+    $data .= $_SERVER['REQUEST_TIME'];
+    $data .= $_SERVER['HTTP_USER_AGENT'];
+    $data .= $_SERVER['LOCAL_ADDR'];
+    $data .= $_SERVER['LOCAL_PORT'];
+    $data .= $_SERVER['REMOTE_ADDR'];
+    $data .= $_SERVER['REMOTE_PORT'];
+    $hash = strtoupper(hash('ripemd128', $uid . $guid . md5($data)));
+    $guid = '{' .   
+            substr($hash,  0,  8) . 
+            '-' .
+            substr($hash,  8,  4) .
+            '-' .
+            substr($hash, 12,  4) .
+            '-' .
+            substr($hash, 16,  4) .
+            '-' .
+            substr($hash, 20, 12) .
+            '}';
+    return $guid;
+  }

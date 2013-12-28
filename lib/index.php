@@ -1,110 +1,26 @@
 <?php
-define ('INDEX', true);
-// Copyright 2013 (c) by Larry Kluger!
-// License: The MIT License. See http://opensource.org/licenses/MIT
+// Error if called separately
+if (!defined('INDEX')) {
+   die('You cannot call this script directly!');
+}
 
-?><!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Force latest IE rendering engine or ChromeFrame if installed -->
-    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-    <meta charset="utf-8">
-    <title>Upload and sign</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
+// generate output
+html_head("Quick Start PHP");
+?>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+		<div class="container">
+			<h1>Hello, world!</h1>
+			<p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+			<p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+		</div>
+    </div>
+<?php
+footer();
+html_foot();
 
-    <!-- Le styles -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
-	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
-    <link rel="stylesheet" href="css/jquery.fileupload-ui.css">
-
-    <style type="text/css">
-      body {
-        padding-top: 20px;
-        padding-bottom: 40px;
-      }
-
-      /* Custom container */
-      .container-narrow {
-        margin: 0 auto;
-        max-width: 700px;
-      }
-      .container-narrow > hr {
-        margin: 30px 0;
-      }
-
-      /* Main marketing message and sign up button */
-      .jumbotron {
-        margin: 60px 0;
-        text-align: center;
-      }
-      .jumbotron h1 {
-        font-size: 72px;
-        line-height: 1;
-      }
-      .jumbotron .btn {
-        font-size: 21px;
-        padding: 14px 24px;
-      }
-	  #modal_feedback {font-weight: bolder;}
-      #dropzone {
-		background: palegreen;
-		width: 180px;
-		height: 40px;
-		line-height: 35px;
-		text-align: center;
-		font-weight: bold;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 20px;
-	  }
-  	  #dropzone.in {
-		width: 600px;
-		height: 200px;
-		line-height: 200px;
-		font-size: larger;
-	  }
-	  #dropzone.hover {
-		background: lawngreen;
-	  }
-	  #dropzone.fade {
-		-webkit-transition: all 0.3s ease-out;
-		-moz-transition: all 0.3s ease-out;
-		-ms-transition: all 0.3s ease-out;
-		-o-transition: all 0.3s ease-out;
-		transition: all 0.3s ease-out;
-		opacity: 1;
-	  }
-	</style>
-
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
-    <![endif]-->
-
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="ico/favicon.png">
-  </head>
-
-  <body>
-
-    <div class="container-narrow">
-      <div class="masthead">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="muted">CoSign Signature Web Agent Example</h3>
-      </div>
-
-      <hr>
+break;
+?>
 
       <div class="jumbotron">
         <h1>Upload and Sign</h1>
@@ -126,7 +42,7 @@ define ('INDEX', true);
 		</div>
 		
         <!-- <a id="sign_btn" class="btn btn-large btn-success" href="#">Sign!</a> -->
-        <p class="lead" style="margin-top:20px;">Use credentials: John Miller / 12345678</p>
+        <p class="lead" style="margin-top:20px;">Use your DevPortal email and password</p>
 	  </div>
     </div> <!-- /container -->
 
@@ -138,7 +54,7 @@ define ('INDEX', true);
 	  <div class="modal-body">
 	    <p id="modal_feedback"></p>
 		<p>We're processing your signing request.</p>
-		<p>Remember to authenticate as John Miller, password 12345678</p>
+		<p>Remember to use your DevPortal email and password</p>
 	  </div>
 	</div>
 	
