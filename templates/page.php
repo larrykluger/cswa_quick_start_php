@@ -1,7 +1,7 @@
 <?php
 // page.php
 
-function html_head($title=""){
+function html_head($title="", $css=""){
 
 ?><!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -19,27 +19,34 @@ function html_head($title=""){
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+	<link rel="stylesheet" href="css/spinner.css">
+	<?php if (!empty($css)) {
+		echo '<style type="text/css">' . $css . '</style>';
+	}
+	?>
   </head>
   <body>
-   <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          CoSign Signature Web Agent
-        </div>
-		
-        <div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<li><a href="#">Link</a></li>
-				<li><a href="#">Link</a></li>
-        </div><!--/.navbar-collapse -->
-      </div>
+    <!-- Docs master nav -->
+    <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="../" class="navbar-brand">CoSign Signature Web Agent</a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="index.php">Quick Start Example</a>
+        </li>
+      </ul>
     </nav>
+  </div>
+</header>
 <?php
 }
 
@@ -48,7 +55,6 @@ function footer(){
 ?>
 	<hr>
 	<footer>
-		<p><a href="http://opensource.org/licenses/MIT">MIT License</a></p>
 	</footer>
 <?php
 }
@@ -59,3 +65,31 @@ function html_foot(){
 </html>
 <?php
 }
+function add_spinner(){
+	add_circle_spinner();
+}
+function add_circle_spinner(){
+?>
+<div class="spinner"><!-- from http://tobiasahlin.com/spinkit/ -->
+	<div class="spinner-container container1">
+		<div class="circle1"></div>
+		<div class="circle2"></div>
+		<div class="circle3"></div>
+		<div class="circle4"></div>
+	</div>
+	<div class="spinner-container container2">
+		<div class="circle1"></div>
+		<div class="circle2"></div>
+		<div class="circle3"></div>
+		<div class="circle4"></div>
+	</div>
+	<div class="spinner-container container3">
+		<div class="circle1"></div>
+		<div class="circle2"></div>
+		<div class="circle3"></div>
+		<div class="circle4"></div>
+	</div>
+</div>
+<?php
+}
+

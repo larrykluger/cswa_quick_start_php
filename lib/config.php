@@ -15,20 +15,29 @@ require_once ('lib/utils.php');
 
 // cookie definition
 // Serialize the following
-// cookie_info [cookie_ver => COOKIE_VER, filename => string, guid => string]
+// cookie_info [cookie_ver => COOKIE_VER,
+//              filename => string,
+//              web_agent_session => string,
+//              guid => string]
 
 
 
 // Constants
 define ('CSWA_URL', 'https://webagentdev.arx.com/');
-define ('SIGN_FINISH', 'index.php?op=sign_finish_html');
+define ('SIGN_FINISH', 'index.php?op=file_signed');
 define ('FILES_DIR', 'files'); // last part of dir for caching signed files
 define ('GC_TIME', 60 * 60); // in seconds -- how long should signed files sit in the cache dir before being reaped?
 define ('SUCCESS', 0);
-define ('COOKIE_NAME', 'sess');
+define ('AJAX_RESP_VER', 1); // version of the response Ajax protocol
+define ('COOKIE_NAME', 'qs_session');
 define ('COOKIE_VER', 1);
+define ('SAMPLE_FILE', 'sample.pdf');
+define ('SIGNED_FILE_PREFIX', 'signed '); // add the prefix to the signed file so
+                                          // the download won't overwrite the 
+										  // original
 
-
+// please change to your own secret!
+define ('COOKIE_SECRET', '4ZJyrL384z39n4JG0hklu190y3pky5h1'); // see http://randomkeygen.com/
 
 
 // Constants for CoSign Signature Web Agent

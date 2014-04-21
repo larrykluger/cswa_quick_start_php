@@ -13,45 +13,55 @@ if (!defined('INDEX')) {
 
 //============================================================+
 // find_cookie -- read the session info from the cookie
+// We check that the cookie signature matches the content
 // Side effect: creates/sets $cookie_info
 //============================================================+
 function find_cookie()
 {
 	global $cookie_info;
-	if (isset($_COOKIE[COOKIE_NAME]) {
+	if (isset($_COOKIE[COOKIE_NAME])) {
 		// cookie available
-		$cookie_info = unserialize ($_COOKIE[COOKIE_NAME]);
-		if (!is_array($cookie_info) || !isset($cookie_info['cookie_ver'] || $cookie_info['cookie_ver'] != COOKIE_VER) {
+		$cookie_structure = unserialize (base64_decode($_COOKIE[COOKIE_NAME]));
+		if ($cookie_structure['signature'] !== 
+			hash ('sha256', COOKIE_SECRET . 
+				$cookie_structure['random_info'] . $cookie_structure['serialized_data'])) {
+			exit('======= Cookie tamper detected! =======');
+		}
+		// cookie ok
+		$cookie_info = unserialize (base64_decode($cookie_structure['serialized_data']));
+		if (!is_array($cookie_info) || !isset($cookie_info['cookie_ver']) || $cookie_info['cookie_ver'] != COOKIE_VER) {
 			// bad moon rising: not our cookie
 			exit ('=======  Bad cookie! =======');
 		}
 	} else {
 		// create cookie
-		$cookie_info = ['cookie_ver' => COOKIE_VER,
+		$cookie_info = array('cookie_ver' => COOKIE_VER,
 			'filename' => false,
-			'guid' => create_guid()];
+			'web_agent_session' => false,
+			'guid' => create_guid()
+			);
 	}
 }
 //============================================================+
-// send_cookie -- read the session info from the cookie
-// Side effect: creates/sets $cookie_info
+// send_cookie -- must be called before any html output
+// We sign the cookie to detect any unauthorized changes
 //============================================================+
-function find_cookie()
+function send_cookie()
 {
+	// See Jamie Rumbelow's comment on http://goo.gl/Lp48Sh
 	global $cookie_info;
-	if (isset($_COOKIE[COOKIE_NAME]) {
-		// cookie available
-		$cookie_info = unserialize ($_COOKIE[COOKIE_NAME]);
-		if (!is_array($cookie_info) || !isset($cookie_info['cookie_ver'] || $cookie_info['cookie_ver'] != COOKIE_VER) {
-			// bad moon rising: not our cookie
-			exit ('=======  Bad cookie! =======');
-		}
-	} else {
-		// create cookie
-		$cookie_info = ['cookie_ver' => COOKIE_VER,
-			'filename' => false,
-			'guid' => create_guid()];
-	}
+	$serialized_data = base64_encode(serialize($cookie_info));
+	$random_info = sha1(rand(0,500) . microtime() . COOKIE_SECRET);
+	$signature = hash ('sha256', COOKIE_SECRET . $random_info . $serialized_data);
+	$cookie = base64_encode(serialize(array(
+		'signature' => $signature,
+		'random_info' => $random_info,
+		'serialized_data' => $serialized_data)));
+	
+	setcookie ( COOKIE_NAME, $cookie ); // We can't say that the cookie
+	                                    // is only available via http since
+										// that would prevent the Ajax call
+										// from sending the cookie.
 }
 //============================================================+
 // send_redirect -- send redirect header
@@ -64,6 +74,15 @@ function send_redirect($url)
 	exit;
 }
 
+//============================================================+
+// diskfile -- returns the name of the session's file
+//             as it is stored on the disk
+//============================================================+
+function diskfile()
+{
+  global $cookie_info;
+  return "file_" . $cookie_info['guid'] . '.pdf'; 
+}
 //============================================================+
 // url_for -- returns the url for a file
 // ARGS
@@ -130,6 +149,7 @@ function files_dir()
 }
 
 // make_files_dir -- creates the directory for the signed files if it doesn't yet exist
+// Requires the right permissions for the script's user id.
 function make_files_dir()
 {
   $dir_name = files_dir();
@@ -202,3 +222,22 @@ function create_guid($namespace = '') {
             '}';
     return $guid;
   }
+
+  
+//============================================================+
+// unicode -- returns the character from a unicode char
+// credit: http://stackoverflow.com/a/6058533/64904
+// ARGS
+//   $c -- the Unicode character in form \uxxxx eg \u2026 is the ellipses char
+// RETURNS 
+//   the right character
+// eg unicode("\u2026")
+//============================================================+
+function unicode($c)
+{
+	// eg Ellipses  \u2026
+	return (json_decode('"'.$c.'"'));
+}
+  
+  
+  

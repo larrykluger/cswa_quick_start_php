@@ -79,7 +79,7 @@ function handle_file_upload_response($response)
 	// but it should be 
 	//    <?xml version="1.0" encoding="utf-8"
 	// So we hack at the incoming payload to fix it
-	$payload = str_replace ("utf-16", "utf-8", $payload);
+	//$payload = str_replace ("utf-16", "utf-8", $payload);
 	
 	$xml = new SimpleXMLElement($payload);
     $return_code = (string)$xml->Error->returnCode;
